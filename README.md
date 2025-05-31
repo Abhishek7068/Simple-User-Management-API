@@ -2,17 +2,17 @@
 A secure user authentication API built with FastAPI, PostgreSQL, and JWT (JSON Web Tokens) for token-based authentication.
 
 ## Features
-✅ User registration with email/password
+1. User registration with email/password
 
-✅ JWT token-based authentication
+2. JWT token-based authentication
 
-✅ Password hashing with bcrypt
+3. Password hashing with bcrypt
 
-✅ Protected endpoints with user-specific access
+4. Protected endpoints with user-specific access
 
-✅ PostgreSQL database integration
-
-✅ Pydantic data validation
+5. PostgreSQL database integration
+   
+6. Pydantic data validation
 
 ## Tech Stack
 **Framework:** FastAPI
