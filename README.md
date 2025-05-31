@@ -1,7 +1,7 @@
-FastAPI User Authentication System with JWT
+###FastAPI User Authentication System with JWT
 A secure user authentication API built with FastAPI, PostgreSQL, and JWT (JSON Web Tokens) for token-based authentication.
 
-Features
+##Features
 ✅ User registration with email/password
 
 ✅ JWT token-based authentication
