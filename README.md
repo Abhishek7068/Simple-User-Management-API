@@ -1,7 +1,7 @@
-###FastAPI User Authentication System with JWT
+### FastAPI User Authentication System with JWT
 A secure user authentication API built with FastAPI, PostgreSQL, and JWT (JSON Web Tokens) for token-based authentication.
 
-##Features
+## Features
 ✅ User registration with email/password
 
 ✅ JWT token-based authentication
@@ -14,95 +14,98 @@ A secure user authentication API built with FastAPI, PostgreSQL, and JWT (JSON W
 
 ✅ Pydantic data validation
 
-Tech Stack
-Framework: FastAPI
+## Tech Stack
+**Framework:** FastAPI
 
-Database: PostgreSQL
+**Database:** PostgreSQL
 
-Authentication: JWT
+**Authentication**: JWT
 
-Password Hashing: Bcrypt
+**Password Hashing**: Bcrypt
 
-ORM: SQLAlchemy
+**ORM:** SQLAlchemy
 
-Validation: Pydantic
+**Validation: **Pydantic
 
-Installation
-Clone the repository:
-
-bash
+## Installation
+**Clone the repository:**
 git clone https://github.com/yourusername/fastapi-jwt-auth.git
 cd fastapi-jwt-auth
-Create and activate a virtual environment:
 
-bash
+**Create and activate a virtual environment:**
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate    # Windows
-Install dependencies:
 
-bash
+**Install dependencies:**
 pip install -r requirements.txt
-Set up PostgreSQL:
 
+**Set up PostgreSQL:**
 Create a database named user_auth
-
 Update the connection string in app/config.py
 
-Run the application:
-
-bash
+**Run the application:**
 uvicorn app.main:app --reload
-API Endpoints
-Authentication
-POST /register - Register a new user
 
+## API Endpoints
+**Authentication**
+POST /register - Register a new user
 POST /token - Login and get access token
 
-User Profile
+**User Profile**
 GET /profile/{user_id} - Get user profile (authenticated)
-
 PUT /profile/{user_id} - Update user profile (authenticated)
 
-Environment Variables
-Create a .env file with the following variables:
+### Breaking down the components to show thier working
 
-DATABASE_URL=postgresql://username:password@localhost:5432/user_auth
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-Generate a secure secret key with:
+## cCRUD operations  # (crud.py)
+**What it does:**
 
-bash
-openssl rand -hex 32
-Testing with Postman
-Import the Postman collection
+1. Takes a database session and email string as input
+2. Queries the User table for a record matching the email
+3. Returns the first matching user or None if not found
 
-Test the flow:
+**Output:**
+Returns: User model object if found, None if not found
 
-Register → Login → Access Protected Routes
+**Example:**
+Input: email="test@example.com"
+Output: User(id=1, email="test@example.com", hashed_password="...")
 
-Project Structure
-fastapi-jwt-auth/
-├── app/
-│   ├── __init__.py
-│   ├── main.py         # FastAPI app and routes
-│   ├── database.py     # Database connection
-│   ├── models.py       # SQLAlchemy models
-│   ├── schemas.py      # Pydantic models
-│   ├── crud.py         # Database operations
-│   ├── auth.py         # Authentication utilities
-│   └── config.py       # Configuration settings
-├── tests/              # Test cases
-├── requirements.txt    # Dependencies
-└── README.md           # This file
-Development
-Run tests:
+## Authentication (auth.py)
+**What it does:**
 
-bash
-pytest
-Check API documentation:
+1. Gets user by email (calls get_user_by_email)
+2. If no user found → returns False
+3. If user exists → verifies password against stored hash
+4. Returns user if credentials valid, False otherwise
 
-Swagger UI: http://localhost:8000/docs
+**Output:**
+Returns: User object if valid, False if invalid
 
-ReDoc: http://localhost:8000/redoc
+**Password Verification:**
+Uses passlib to compare password input with hashed_password
+Example: verify_password("secret123", "$2b$12$...") → True/False
+
+## Token creation # (auth.py)
+**What it does:**
+1. Takes payload data (typically {"sub": email})
+2. Adds expiration time (default 15 mins)
+3. Signs token with secret key using HS256 algorithm
+
+**Output:**
+Returns: JWT string like "eyJhbGciOiJIUzI1NiIs..."
+
+## Visual Flow
+Client → POST /token (credentials) → Server → 
+   ↓ (if valid) 
+JWT Token → Client → GET /profile (with token) → 
+   ↓ (if valid token)
+User Data
+
+## Key Security Features
+Key Security Features:
+Password Hashing: Never stores plaintext passwords
+JWT Expiration: Tokens automatically expire
+Signature Verification: Tokens can't be tampered with
+User Context: Each token is tied to a specific user
